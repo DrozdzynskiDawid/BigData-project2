@@ -3,7 +3,7 @@
 
 **Zestaw 1 – Netflix-Prize-Data**
 
-### Instrukcja uruchamiania projektu:
+## Instrukcja uruchamiania projektu:
 - pobierz dane dla zestawu 1 [movie_titles.csv](https://www.cs.put.poznan.pl/kjankiewicz/bigdata/stream_project/movie_titles.csv) oraz [netflix-prize-data](https://www.cs.put.poznan.pl/kjankiewicz/bigdata/stream_project/netflix-prize-data.zip) i umieść je w folderze `data`
 - zainstaluj potrzebne biblioteki, w szczególności: `pip install kafka-python`
 
@@ -19,23 +19,24 @@ DELAY_SECONDS = 1
 ``` bash
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
 ```
-
 - utwórz temat producenta w kontenerze Kafki:
  ``` bash
 /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
  --replication-factor 1 --partitions 3 --topic netflix
 ```
+- uruchom skrypt `kafka_producer.py` i obserwuj temat producenta, czy został zasilony
+
+### Wykrywanie anomalii:
 - utwórz temat, do którego trafią wykryte anomalie:
  ``` bash
 /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
  --replication-factor 1 --partitions 3 --topic netflix-anomalies
 ```
-- uruchom skrypt `kafka_producer.py` i obserwuj temat producenta, czy został zasilony
+
 - uruchom skrypt `netflix_data_analysis.py` wraz z wybranymi parametrami D, L oraz O
-- mointoruj temat `netflix-anomalies`
+- monitoruj temat `netflix-anomalies`:
 ```bash
-/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix-anomalies --
-from-beginning 
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix-anomalies --from-beginning 
 ```
 Przykładowy wynik dla parametrów `D=30 L=2 O=2.5`:
 ```json
