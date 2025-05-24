@@ -32,7 +32,7 @@ DELAY_SECONDS = 1
 /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
  --replication-factor 1 --partitions 3 --topic netflix-anomalies
 ```
-
+- zwróć uwagę na plik `flink.properties` i dostosuj poszczególne propsy, w szczególności zwróć uwagę na: `static.file.path` oraz `pipeline.jars` 
 - uruchom skrypt `netflix_data_analysis.py` wraz z wybranymi parametrami D, L oraz O
 - monitoruj temat `netflix-anomalies`:
 ```bash

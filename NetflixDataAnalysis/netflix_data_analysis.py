@@ -26,9 +26,7 @@ def main():
     print("Input Kafka topic:", props.get("kafka.input.topic"))
     print("Static input file:", props.get("static.file.path"))
     config = Configuration()
-    config.set_string("pipeline.jars",
-                      "file:///C:/Users/dawid/Downloads/flink-connector-kafka-4.0.0-2.0.jar;" +
-                      "file:///C:/Users/dawid/Downloads/kafka-clients-4.0.0.jar")
+    config.set_string("pipeline.jars", props.get("pipeline.jars"))
     env = StreamExecutionEnvironment.get_execution_environment(config)
     env.set_parallelism(1)
 
