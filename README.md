@@ -30,4 +30,17 @@ DELAY_SECONDS = 1
 /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
  --replication-factor 1 --partitions 3 --topic netflix-anomalies
 ```
-- uruchom skrypt `kafka_producer.py` i obserwuj temat producenta
+- uruchom skrypt `kafka_producer.py` i obserwuj temat producenta, czy został zasilony
+- uruchom skrypt `netflix_data_analysis.py` wraz z wybranymi parametrami D, L oraz O
+- mointoruj temat `netflix-anomalies`
+```bash
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix-anomalies --
+from-beginning 
+```
+Przykładowy wynik dla parametrów `D=30 L=2 O=2.5`:
+```json
+{"window_start": "1999-11-08T01:00:00", "window_end": "1999-12-08T01:00:00", "title": "Witness", "count": 2, "avg_rate": 5.0}
+{"window_start": "1999-11-08T01:00:00", "window_end": "1999-12-08T01:00:00", "title": "The Piano", "count": 2, "avg_rate": 4.0}
+{"window_start": "1999-11-09T01:00:00", "window_end": "1999-12-09T01:00:00", "title": "Witness", "count": 2, "avg_rate": 5.0}
+{"window_start": "1999-11-09T01:00:00", "window_end": "1999-12-09T01:00:00", "title": "Legends of the Fall", "count": 2, "avg_rate": 4.5}
+```
