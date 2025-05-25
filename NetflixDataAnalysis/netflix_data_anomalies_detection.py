@@ -82,7 +82,7 @@ def main():
     sink = get_kafka_sink(props)
     filtered_result.map(lambda x: x.to_json(), output_type=Types.STRING()).sink_to(sink)
 
-    env.execute("NetflixDataAnalysis")
+    env.execute("NetflixDataAnalysisAnomalies")
 
 if __name__ == "__main__":
     main()

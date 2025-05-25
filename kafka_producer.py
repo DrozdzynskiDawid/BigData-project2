@@ -1,12 +1,10 @@
 import os
 import csv
-import time
 from kafka import KafkaProducer
 
 CSV_FOLDER = 'data\\netflix-prize-data'
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 KAFKA_TOPIC = 'netflix'
-DELAY_SECONDS = 1 
 
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
@@ -24,7 +22,6 @@ def send_csv_file(file_path):
             message = f"{date},{film_id},{user_id},{rate}"
             producer.send(KAFKA_TOPIC, message)
             print(f"Wysłano: {message}")
-            time.sleep(DELAY_SECONDS)
 
 def produce_from_folder(folder_path):
     for filename in sorted(os.listdir(folder_path)):
