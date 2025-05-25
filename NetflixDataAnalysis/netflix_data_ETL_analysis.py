@@ -4,6 +4,7 @@ from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common.typeinfo import Types
 from pyflink.datastream.window import TumblingEventTimeWindows
 
+from NetflixDataAnalysis.connectors.mongodb_sink import write_to_mongo
 from NetflixDataAnalysis.tools.enrich_with_movie_titles import EnrichWithMovieTitles
 from NetflixDataAnalysis.tools.timestamp_assigner import NetflixTimestampAssigner
 from NetflixDataAnalysis.tools.unique_users_aggregator import UniqueUserAggregator
@@ -50,8 +51,12 @@ def main():
 
     # WYNIK
     result = windowed_stream.process(UniqueUserAggregator(), output_type=Types.PICKLED_BYTE_ARRAY())
+    result_json = result.map(lambda x: x.to_json())
     # PRINTOWANIE NA KONSOLE
-    result.map(lambda x: x.to_json()).print()
+    # result_json.print()
+
+    #ZAPIS DO MONGODB
+    result_json.map(write_to_mongo)
 
     env.execute("NetflixDataAnalysisETL")
 

@@ -1,6 +1,5 @@
 from pyflink.datastream.connectors.kafka import KafkaSource
 from pyflink.common.serialization import SimpleStringSchema
-from pyflink.common.typeinfo import Types
 
 def get_kafka_source(properties: dict) -> KafkaSource:
     kafka_source = KafkaSource.builder() \
