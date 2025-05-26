@@ -1,5 +1,5 @@
 import sys
-from pyflink.common import Configuration, Time
+from pyflink.common import Configuration, Time, Duration
 from pyflink.common.watermark_strategy import WatermarkStrategy
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common.typeinfo import Types
@@ -38,7 +38,7 @@ def main():
     )
 
     # USTAWIENIE WATERMARKÓW
-    watermark_strategy = WatermarkStrategy.for_monotonous_timestamps() \
+    watermark_strategy = WatermarkStrategy.for_bounded_out_of_orderness(Duration.of_days(1)) \
         .with_timestamp_assigner(NetflixTimestampAssigner())
 
     netflix_data_stream = netflix_data_stream.assign_timestamps_and_watermarks(watermark_strategy)

@@ -5,6 +5,7 @@ from pyflink.common.watermark_strategy import WatermarkStrategy
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common.typeinfo import Types
 from pyflink.datastream.window import SlidingEventTimeWindows
+from pyflink.common import Duration
 
 from NetflixDataAnalysis.connectors.kafka_sink import get_kafka_sink
 from NetflixDataAnalysis.models.netflix_data_agg import NetflixDataAgg
@@ -43,9 +44,8 @@ def main():
     )
 
     # USTAWIENIE WATERMARKÓW
-    watermark_strategy = WatermarkStrategy.for_monotonous_timestamps() \
+    watermark_strategy = WatermarkStrategy.for_bounded_out_of_orderness(Duration.of_days(1)) \
         .with_timestamp_assigner(NetflixTimestampAssigner())
-
     netflix_data_stream = netflix_data_stream.assign_timestamps_and_watermarks(watermark_strategy)
 
     # WCZYTYWANIE DANYCH DOTYCZĄCYCH FILMÓW Z PLIKU STATYCZNEGO I DOŁĄCZANIE ICH DO STRUMIENIA
