@@ -12,7 +12,6 @@
 CSV_FOLDER = 'data\\netflix-prize-data'
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 KAFKA_TOPIC = 'netflix'
-DELAY_SECONDS = 1 
 ```
 
 - skorzystaj z kontenerów FlinkAndFriends2025, upewnij się, że wskazany parametr ma poprawną wartość w pliku `docker-compose.yml`:
@@ -33,7 +32,7 @@ DELAY_SECONDS = 1
  --replication-factor 1 --partitions 3 --topic netflix-anomalies
 ```
 - zwróć uwagę na plik `flink.properties` i dostosuj poszczególne propsy, w szczególności zwróć uwagę na: `static.file.path` oraz `pipeline.jars` 
-- uruchom skrypt `netflix_data_anomalies_detection.py` wraz z wybranymi parametrami D, L oraz O
+- uruchom skrypt `netflix_data_anomalies_detection.py` wraz z wybranymi parametrami D, L oraz O podanymi w run configuration IDE
 - monitoruj temat `netflix-anomalies`:
 ```bash
 /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix-anomalies --from-beginning 
@@ -52,8 +51,8 @@ Przykładowy wynik dla parametrów `D=30 L=2 O=2.5`:
 docker run -d -p 27017:27017 --name mongodb mongo
 ```
 - sprawdź parametry dotyczące MongoDB w pliku `flink.properties`
-- uruchom skrypt `netflix_data_ETL_analysis`
-- po chwili uruchom skrypt `mongodb_reader` i sprawdź wyniki w kolekcji MongoDB
+- uruchom skrypt `netflix_data_ETL_analysis.py` z wybranym parametrem delay (wartość A lub C) podanym w run configuration IDE
+- po chwili uruchom skrypt `mongodb_reader.py` i sprawdź wyniki w kolekcji MongoDB
 
 Przykładowy wynik:
 ```json

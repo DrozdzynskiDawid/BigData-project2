@@ -1,3 +1,4 @@
+import sys
 from pyflink.common import Configuration, Time
 from pyflink.common.watermark_strategy import WatermarkStrategy
 from pyflink.datastream import StreamExecutionEnvironment
@@ -8,12 +9,14 @@ from NetflixDataAnalysis.connectors.mongodb_sink import write_to_mongo
 from NetflixDataAnalysis.tools.enrich_with_movie_titles import EnrichWithMovieTitles
 from NetflixDataAnalysis.tools.timestamp_assigner import NetflixTimestampAssigner
 from NetflixDataAnalysis.tools.unique_users_aggregator import UniqueUserAggregator
+from NetflixDataAnalysis.triggers.InstantTrigger import InstantTrigger
 from connectors.kafka_source import get_kafka_source
 from models.netflix_data import NetflixData
 from tools.properties import load_properties
 
 
 def main():
+    delay = sys.argv[1]
     props = load_properties("flink.properties")
     print("Input Kafka topic:", props.get("kafka.input.topic"))
     print("Static input file:", props.get("static.file.path"))
@@ -46,8 +49,13 @@ def main():
     )
 
     # OKNO
-    windowed_stream = enriched_stream.key_by(lambda x: (x.film_id, x.title)) \
-        .window(TumblingEventTimeWindows.of(Time.days(31)))
+    if delay == 'A':
+        windowed_stream = enriched_stream.key_by(lambda x: (x.film_id, x.title)) \
+            .window(TumblingEventTimeWindows.of(Time.days(31))) \
+            .trigger(InstantTrigger.create())
+    if delay == 'C':
+        windowed_stream = enriched_stream.key_by(lambda x: (x.film_id, x.title)) \
+            .window(TumblingEventTimeWindows.of(Time.days(31)))
 
     # WYNIK
     result = windowed_stream.process(UniqueUserAggregator(), output_type=Types.PICKLED_BYTE_ARRAY())
