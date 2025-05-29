@@ -33,16 +33,13 @@ KAFKA_TOPIC = 'netflix'
 ```
 - zwróć uwagę na plik `flink.properties` i dostosuj poszczególne propsy, w szczególności zwróć uwagę na: `static.file.path` oraz `pipeline.jars` 
 - uruchom skrypt `netflix_data_anomalies_detection.py` wraz z wybranymi parametrami D, L oraz O podanymi w run configuration IDE
-- monitoruj temat `netflix-anomalies`:
-```bash
-/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix-anomalies --from-beginning 
-```
-Przykładowy wynik dla parametrów `D=30 L=2 O=2.5`:
+- uruchom skrypt konsumenta z tematu odbiorczego kafki `kafka_consumer.py` i obserwuj wyniki
+Przykładowa część wyniku dla parametrów `D:15 L:8 O:3.7`:
 ```json
-{"window_start": "1999-11-08T01:00:00", "window_end": "1999-12-08T01:00:00", "title": "Witness", "count": 2, "avg_rate": 5.0}
-{"window_start": "1999-11-08T01:00:00", "window_end": "1999-12-08T01:00:00", "title": "The Piano", "count": 2, "avg_rate": 4.0}
-{"window_start": "1999-11-09T01:00:00", "window_end": "1999-12-09T01:00:00", "title": "Witness", "count": 2, "avg_rate": 5.0}
-{"window_start": "1999-11-09T01:00:00", "window_end": "1999-12-09T01:00:00", "title": "Legends of the Fall", "count": 2, "avg_rate": 4.5}
+Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "The Game", "count": 20, "avg_rate": 3.8}
+Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "Heathers", "count": 20, "avg_rate": 3.75}
+Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "Five Easy Pieces", "count": 9, "avg_rate": 3.7777777777777777}
+Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "The Hunt for Red October", "count": 58, "avg_rate": 4.086206896551723}
 ```
 
 ### ETL – obraz czasu rzeczywistego:
