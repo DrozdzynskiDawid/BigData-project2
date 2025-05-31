@@ -4,42 +4,63 @@
 **Zestaw 1 – Netflix-Prize-Data**
 
 ## Instrukcja uruchamiania projektu:
+### Przygotowania:
 - pobierz dane dla zestawu 1 [movie_titles.csv](https://www.cs.put.poznan.pl/kjankiewicz/bigdata/stream_project/movie_titles.csv) oraz [netflix-prize-data](https://www.cs.put.poznan.pl/kjankiewicz/bigdata/stream_project/netflix-prize-data.zip) i umieść je w folderze `data`
-- zainstaluj potrzebne biblioteki, w szczególności: `pip install kafka-python`
+- zainstaluj potrzebne biblioteki, w szczególności: `pip install kafka-python` oraz `pip install apache-flink`
+- w celu zainstalowania wszystkich wymaganych pakietów możesz skorzystać z przygotowanego pliku `requirements.txt`
 
-- ustaw wartości poszczególnych parametrów skryptu zgodnie ze swoją konfiguracją:
+- podczas uruchamiania projektu korzystaj z kontenerów `FlinkAndFriends2025`, upewnij się, że wskazany parametr ma poprawną wartość w pliku `docker-compose.yml`:
+``` bash
+KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+```
+```bash
+docker compose -p fandf up -d
+```
+- utwórz temat producenta w kontenerze Kafki:
+ ``` bash
+docker exec -it fandf-kafka-1 /bin/bash
+```
+```bash
+/opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
+ --replication-factor 1 --partitions 3 --topic netflix
+```
+- ustaw wartości poszczególnych parametrów skryptu `kafka-producer.py` zgodnie ze swoją konfiguracją:
 ```
 CSV_FOLDER = 'data\\netflix-prize-data'
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 KAFKA_TOPIC = 'netflix'
 ```
-
-- skorzystaj z kontenerów FlinkAndFriends2025, upewnij się, że wskazany parametr ma poprawną wartość w pliku `docker-compose.yml`:
-``` bash
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-```
-- utwórz temat producenta w kontenerze Kafki:
- ``` bash
-/opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
- --replication-factor 1 --partitions 3 --topic netflix
-```
 - uruchom skrypt `kafka_producer.py` i obserwuj temat producenta, czy został zasilony
-
+```bash
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix --from-beginning
+```
+Spodziewany format wiadomości w temacie:
+```json
+2000-01-29,7397,1428659,3
+2000-01-29,7397,562156,3
+2000-01-29,7397,417988,4
+```
 ### Wykrywanie anomalii:
 - utwórz temat, do którego trafią wykryte anomalie:
  ``` bash
 /opt/kafka/bin/kafka-topics.sh --create --bootstrap-server kafka:9092 \
  --replication-factor 1 --partitions 3 --topic netflix-anomalies
 ```
-- zwróć uwagę na plik `flink.properties` i dostosuj poszczególne propsy, w szczególności zwróć uwagę na: `static.file.path` oraz `pipeline.jars` 
+- pobierz potrzebne pliki `.jar` zgodnie z tutorialem do laboratoriów z Flinka, zwróć uwagę na plik `flink.properties` i dostosuj poszczególne propsy, w szczególności zwróć uwagę na: `static.file.path` oraz `pipeline.jars` 
 - uruchom skrypt `netflix_data_anomalies_detection.py` wraz z wybranymi parametrami D, L oraz O podanymi w run configuration IDE
-- uruchom skrypt konsumenta z tematu odbiorczego kafki `kafka_consumer.py` i obserwuj wyniki
-Przykładowa część wyniku dla parametrów `D:15 L:8 O:3.7`:
+- po chwili uruchom skrypt konsumenta z tematu odbiorczego kafki `kafka_consumer.py` i obserwuj wyniki, upewniając się wcześniej czy ma on poprawne parametry:
+```bash
+KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
+KAFKA_TOPIC = 'netflix-anomalies'
+```
+Przykładowa część wyniku dla parametrów `D:30 L:20 O:4.3`:
 ```json
-Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "The Game", "count": 20, "avg_rate": 3.8}
-Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "Heathers", "count": 20, "avg_rate": 3.75}
-Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "Five Easy Pieces", "count": 9, "avg_rate": 3.7777777777777777}
-Odebrano: {"window_start": "2000-01-03T01:00:00", "window_end": "2000-01-18T01:00:00", "title": "The Hunt for Red October", "count": 58, "avg_rate": 4.086206896551723}
+Nasłuchiwanie wiadomości z tematu: netflix-anomalies
+Odebrano: {"window_start": "1999-12-09T01:00:00", "window_end": "2000-01-08T01:00:00", "title": "Apollo 13", "count": 20, "avg_rate": 4.35}
+Odebrano: {"window_start": "1999-12-10T01:00:00", "window_end": "2000-01-09T01:00:00", "title": "Die Hard", "count": 25, "avg_rate": 4.32}
+Odebrano: {"window_start": "1999-12-10T01:00:00", "window_end": "2000-01-09T01:00:00", "title": "The Matrix", "count": 32, "avg_rate": 4.3125}
+Odebrano: {"window_start": "1999-12-11T01:00:00", "window_end": "2000-01-10T01:00:00", "title": "October Sky", "count": 22, "avg_rate": 4.363636363636363}
+Odebrano: {"window_start": "1999-12-11T01:00:00", "window_end": "2000-01-10T01:00:00", "title": "The Terminator", "count": 20, "avg_rate": 4.35}
 ```
 
 ### ETL – obraz czasu rzeczywistego:

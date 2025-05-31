@@ -12,6 +12,7 @@ from NetflixDataAnalysis.models.netflix_data_agg import NetflixDataAgg
 from NetflixDataAnalysis.tools.add_window_metadata import AddWindowMetadata
 from NetflixDataAnalysis.tools.enrich_with_movie_titles import EnrichWithMovieTitles
 from NetflixDataAnalysis.tools.timestamp_assigner import NetflixTimestampAssigner
+from NetflixDataAnalysis.triggers.InstantTrigger import InstantTrigger
 from connectors.kafka_source import get_kafka_source
 from models.netflix_data import NetflixData
 from tools.properties import load_properties
@@ -44,7 +45,7 @@ def main():
     )
 
     # USTAWIENIE WATERMARKÓW
-    watermark_strategy = WatermarkStrategy.for_bounded_out_of_orderness(Duration.of_days(1)) \
+    watermark_strategy = WatermarkStrategy.for_bounded_out_of_orderness(Duration.of_hours(6)) \
         .with_timestamp_assigner(NetflixTimestampAssigner())
     netflix_data_stream = netflix_data_stream.assign_timestamps_and_watermarks(watermark_strategy)
 
