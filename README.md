@@ -35,7 +35,7 @@ KAFKA_TOPIC = 'netflix'
 /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic netflix --from-beginning
 ```
 Spodziewany format wiadomości w temacie:
-```json
+```
 2000-01-29,7397,1428659,3
 2000-01-29,7397,562156,3
 2000-01-29,7397,417988,4
@@ -55,7 +55,7 @@ KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 KAFKA_TOPIC = 'netflix-anomalies'
 ```
 Przykładowa część wyniku dla parametrów `D:30 L:20 O:4.3`:
-```json
+```
 Nasłuchiwanie wiadomości z tematu: netflix-anomalies
 Odebrano: {"window_start": "1999-12-09T01:00:00", "window_end": "2000-01-08T01:00:00", "title": "Apollo 13", "count": 20, "avg_rate": 4.35}
 Odebrano: {"window_start": "1999-12-10T01:00:00", "window_end": "2000-01-09T01:00:00", "title": "Die Hard", "count": 25, "avg_rate": 4.32}
