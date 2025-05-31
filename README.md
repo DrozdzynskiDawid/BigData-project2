@@ -6,7 +6,10 @@
 ## Instrukcja uruchamiania projektu:
 ### Przygotowania:
 - pobierz dane dla zestawu 1 [movie_titles.csv](https://www.cs.put.poznan.pl/kjankiewicz/bigdata/stream_project/movie_titles.csv) oraz [netflix-prize-data](https://www.cs.put.poznan.pl/kjankiewicz/bigdata/stream_project/netflix-prize-data.zip) i umieść je w folderze `data`
-- zainstaluj potrzebne biblioteki, w szczególności: `pip install kafka-python` oraz `pip install apache-flink`
+- uruchom projekt w PyCharm
+- stwórz nowy venv - wejdź w prawym dolnym rogu w `Python [nr wersji]`, następnie wybierz `add new interpreter` i potem `add local interpreter`, wybierz go i zainstaluj z manage packages `apache-flink==2.0.0` i `pymongo==4.13.0`
+- uruchamiając skrypty wybieraj ten venv
+- zainstaluj potrzebne biblioteki
 - w celu zainstalowania wszystkich wymaganych pakietów możesz skorzystać z przygotowanego pliku `requirements.txt`
 
 - podczas uruchamiania projektu korzystaj z kontenerów `FlinkAndFriends2025`, upewnij się, że wskazany parametr ma poprawną wartość w pliku `docker-compose.yml`:
