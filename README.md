@@ -48,6 +48,7 @@ Spodziewany format wiadomości w temacie:
 ```
 - pobierz potrzebne pliki `.jar` zgodnie z tutorialem do laboratoriów z Flinka, zwróć uwagę na plik `flink.properties` i dostosuj poszczególne propsy, w szczególności zwróć uwagę na: `static.file.path` oraz `pipeline.jars` 
 - uruchom skrypt `netflix_data_anomalies_detection.py` wraz z wybranymi parametrami D, L oraz O podanymi w run configuration IDE
+![Obraz1](img/img_1.png)
 - po chwili uruchom skrypt konsumenta z tematu odbiorczego kafki `kafka_consumer.py` i obserwuj wyniki, upewniając się wcześniej czy ma on poprawne parametry:
 ```bash
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
@@ -70,12 +71,22 @@ docker run -d -p 27017:27017 --name mongodb mongo
 ```
 - sprawdź parametry dotyczące MongoDB w pliku `flink.properties`
 - uruchom skrypt `netflix_data_ETL_analysis.py` z wybranym parametrem delay (wartość A lub C) podanym w run configuration IDE
+![Obraz](img/img.png)
 - po chwili uruchom skrypt `mongodb_reader.py` i sprawdź wyniki w kolekcji MongoDB
 
-Przykładowy wynik:
+Przykładowy fragment wyniku dla trybu `A`:
 ```json
-{"_id": "683306f7474dca658742384a", "id": 4271, "title": "Bound", "month": "1999-11", "count_rate": 1, "sum_rate": 3.0, "unique_users": 1}
-{"_id": "683306f7474dca658742384c", "id": 16668, "title": "A Few Good Men", "month": "1999-11", "count_rate": 2, "sum_rate": 9.0, "unique_users": 2}
-{"_id": "683306f7474dca658742384e", "id": 6971, "title": "Ferris Bueller's Day Off", "month": "1999-11", "count_rate": 3, "sum_rate": 11.0, "unique_users": 3}
-{"_id": "683306f7474dca6587423850", "id": 7155, "title": "The Pelican Brief", "month": "1999-11", "count_rate": 2, "sum_rate": 8.0, "unique_users": 2}
+{"_id": "683ad97fbffce212c887074d", "id": 4883, "title": "The Bodyguard", "month": "1999-12", "count_rate": 26, "sum_rate": 72.0, "unique_users": 26}
+{"_id": "683ad97fbffce212c887074f", "id": 4883, "title": "The Bodyguard", "month": "1999-12", "count_rate": 27, "sum_rate": 76.0, "unique_users": 27}
+{"_id": "683ad97fbffce212c8870751", "id": 4883, "title": "The Bodyguard", "month": "1999-12", "count_rate": 28, "sum_rate": 81.0, "unique_users": 28}
 ```
+Przykładowy fragment wyniku dla trybu `C`:
+```json
+{"_id": "683ada53a0d9acc9c30e23f5", "id": 15940, "title": "Box of Moonlight", "month": "1999-12", "count_rate": 4, "sum_rate": 17.0, "unique_users": 4}
+{"_id": "683ada53a0d9acc9c30e23f7", "id": 9654, "title": "Very Bad Things", "month": "1999-12", "count_rate": 18, "sum_rate": 39.0, "unique_users": 18}
+{"_id": "683ada53a0d9acc9c30e23f9", "id": 13787, "title": "Powder", "month": "1999-12", "count_rate": 29, "sum_rate": 97.0, "unique_users": 29}
+```
+
+### Restart środowiska:
+- usuń tematy Kafki
+- wykonaj skrypt `mongodb_restart.py`, aby usunąć kolekcję w MongoDB

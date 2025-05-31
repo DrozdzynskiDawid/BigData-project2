@@ -17,6 +17,10 @@ from tools.properties import load_properties
 
 def main():
     delay = sys.argv[1]
+    if delay not in ['A', 'C']:
+        print("Wrong parameter, allowed values 'A' or 'C'")
+        return
+
     props = load_properties("flink.properties")
     print("Input Kafka topic:", props.get("kafka.input.topic"))
     print("Static input file:", props.get("static.file.path"))
